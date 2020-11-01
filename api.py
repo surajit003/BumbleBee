@@ -1,4 +1,5 @@
 from webob import Request, Response
+from parse import parse
 
 
 class API:
@@ -19,8 +20,10 @@ class API:
 
     def find_handler(self, request):
         for path, handler in self.routes.items():
-            if path == request.path:
-                return handler
+            print(path,request.path)
+            parse_result = parse(path, request.path)
+            if parse_result is not None:
+                return handler, parse_result.named
 
     def default_response(self, response):
         response.status_code = 404
@@ -29,9 +32,9 @@ class API:
     def handle_request(self, request):
         user_agent = request.environ.get("HTTP_USER_AGENT", "No User Agent Found")
         response = Response()
-        handler = self.find_handler(request)
+        handler,kwargs = self.find_handler(request)
         if handler:
-            handler(request, response)
+            handler(request, response,**kwargs)
         else:
             self.default_response(response)
         return response
