@@ -32,7 +32,6 @@ class API:
         handler = self.find_handler(request)
         if handler:
             handler(request, response)
-            return response
         else:
             self.default_response(response)
-            return response
+        return response
