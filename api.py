@@ -9,6 +9,7 @@ class API:
         def wrapper(handler):
             self.routes[path] = handler
             return handler
+
         return wrapper
 
     def __call__(self, environ, start_response):
